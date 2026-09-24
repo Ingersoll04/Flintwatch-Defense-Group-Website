@@ -48,22 +48,37 @@ form?.addEventListener('submit', (event) => {
   }
 
   const data = new FormData(form);
-  const subject = encodeURIComponent(`FlintWatch Service Request — ${data.get('service')}`);
-  const body = encodeURIComponent(
-`FLINTWATCH SERVICE REQUEST
+  const selectedAreas = data.getAll('areas');
+  const areas = selectedAreas.length ? selectedAreas.join(', ') : 'Not specified';
 
+  const subject = encodeURIComponent(`FlintWatch Client Intake — ${data.get('service')}`);
+  const body = encodeURIComponent(
+`FLINTWATCH CLIENT INTAKE
+
+CONTACT
 Name: ${data.get('name')}
 Organization / Household: ${data.get('organization') || 'N/A'}
 Email: ${data.get('email')}
 Phone: ${data.get('phone') || 'N/A'}
-Service: ${data.get('service')}
+City / Area: ${data.get('location') || 'N/A'}
+Preferred Contact: ${data.get('contact_preference') || 'Email'}
+Best Time: ${data.get('contact_time') || 'Any reasonable time'}
 
-Request / Goals:
+SERVICE
+Primary Service: ${data.get('service')}
+Urgency: ${data.get('urgency')}
+Areas Involved: ${areas}
+
+REQUEST / CONTEXT
 ${data.get('message')}
 
-I understand this is an initial service request and have not included passwords, recovery codes, API keys, private keys, SSNs, payment-card numbers, or other authentication secrets.`
+DESIRED OUTCOME
+${data.get('desired_outcome') || 'Not specified'}
+
+CLIENT ACKNOWLEDGMENT
+This is an initial service request. I have not included passwords, one-time codes, recovery codes, API keys, private keys, Social Security numbers, payment-card numbers, full bank account numbers, or authentication secrets. I understand this request does not create an emergency-response, law-enforcement, legal/compliance, financial-recovery guarantee, security guarantee, or regulated protective-services relationship.`
   );
 
-  if (status) status.textContent = 'Opening your email application...';
+  if (status) status.textContent = 'Opening your email application with the completed FlintWatch request...';
   window.location.href = `mailto:flintwatch.command@gmail.com?subject=${subject}&body=${body}`;
 });
