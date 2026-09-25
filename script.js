@@ -95,6 +95,9 @@ const clearIntakeButton = document.getElementById('clear-intake');
 const copyIntakeButton = document.getElementById('copy-intake');
 const emailIntakeButton = document.getElementById('email-intake');
 const emailHandoffStatus = document.getElementById('email-handoff-status');
+const emailProviderButtons = document.querySelectorAll('[data-email-provider]');
+const intakeRecipient = 'flintwatch.command@gmail.com';
+let preparedIntake = null;
 
 const intakeRequestTypes = {
   'Cyber Defense & Digital Security': [
@@ -226,8 +229,20 @@ function restoreIntakeDraft() {
 }
 
 saveIntakeButton?.addEventListener('click', saveIntakeDraft);
+
+function invalidatePreparedIntake() {
+  if (!preparedIntake) return;
+  preparedIntake = null;
+  if (intakeReview) intakeReview.hidden = true;
+  if (intakeStatus) intakeStatus.textContent = 'Your form changed. Build the request again to review the latest details.';
+}
+
+intakeForm?.addEventListener('input', invalidatePreparedIntake);
+intakeForm?.addEventListener('change', invalidatePreparedIntake);
+
 clearIntakeButton?.addEventListener('click', () => {
   intakeForm?.reset();
+  preparedIntake = null;
   if (serviceDetailsBlock) serviceDetailsBlock.hidden = true;
   if (requestTypeSelect) requestTypeSelect.innerHTML = '<option value="">Select your request</option>';
   if (intakeReview) intakeReview.hidden = true;
@@ -244,6 +259,10 @@ intakeForm?.addEventListener('submit', (event) => {
   }
   const d = intakeDataObject();
   const summaryText = buildIntakeSummary(d);
+  preparedIntake = {
+    subject: `FlintWatch Service Request — ${d.requestType || d.serviceArea || 'Client Intake'}`,
+    body: summaryText
+  };
   if (intakeSummary) intakeSummary.textContent = summaryText;
   if (intakeReview) {
     intakeReview.hidden = false;
@@ -253,26 +272,51 @@ intakeForm?.addEventListener('submit', (event) => {
 });
 
 copyIntakeButton?.addEventListener('click', async () => {
-  const text = intakeSummary?.textContent || '';
+  const text = preparedIntake?.body || '';
   if (!text) return;
   try {
     await navigator.clipboard.writeText(text);
     copyIntakeButton.textContent = 'Copied';
-    if (emailHandoffStatus) emailHandoffStatus.textContent = 'Request copied. Open your email provider, paste it into a message to flintwatch.command@gmail.com, then press Send.';
-    setTimeout(() => { copyIntakeButton.textContent = 'Copy Request'; }, 1600);
+    if (emailHandoffStatus) emailHandoffStatus.textContent = 'Request copied. Paste it into a message to flintwatch.command@gmail.com if your email provider does not fill in the draft.';
+    setTimeout(() => { copyIntakeButton.textContent = 'Copy request'; }, 1600);
   } catch {
     window.prompt('Copy your FlintWatch request:', text);
     if (emailHandoffStatus) emailHandoffStatus.textContent = 'Copy the selected request, then paste it into a message to flintwatch.command@gmail.com and press Send.';
   }
 });
 
+function intakeEmailUrl(provider, request) {
+  const to = encodeURIComponent(intakeRecipient);
+  const subject = encodeURIComponent(request.subject);
+  const body = encodeURIComponent(request.body);
+  switch (provider) {
+    case 'gmail':
+      return `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
+    case 'outlook':
+      return `https://outlook.live.com/mail/0/deeplink/compose?to=${to}&subject=${subject}&body=${body}`;
+    case 'yahoo':
+      return `https://compose.mail.yahoo.com/?to=${to}&subject=${subject}&body=${body}`;
+    case 'device':
+      return `mailto:${intakeRecipient}?subject=${subject}&body=${body}`;
+    default:
+      return null;
+  }
+}
+
+emailProviderButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    if (!preparedIntake) return;
+    const url = intakeEmailUrl(button.dataset.emailProvider, preparedIntake);
+    if (!url) return;
+    if (emailHandoffStatus) emailHandoffStatus.textContent = 'Opening your email draft. Check that the recipient, subject, and complete request appear before pressing Send. If anything is missing, use Copy request. Your request has not been sent yet.';
+    window.open(url, '_blank', 'noopener,noreferrer');
+  });
+});
+
 emailIntakeButton?.addEventListener('click', () => {
-  const d = intakeDataObject();
-  const text = intakeSummary?.textContent || buildIntakeSummary(d);
-  const subject = encodeURIComponent(`FlintWatch Service Request — ${d.requestType || d.serviceArea || 'Client Intake'}`);
-  const body = encodeURIComponent(text);
-  if (emailHandoffStatus) emailHandoffStatus.textContent = 'Opening your device email app. If nothing happens, copy the request and use Gmail, Outlook, or your usual email provider. Your request has not been sent yet.';
-  window.location.href = `mailto:flintwatch.command@gmail.com?subject=${subject}&body=${body}`;
+  if (!preparedIntake) return;
+  if (emailHandoffStatus) emailHandoffStatus.textContent = 'Opening your default email app. If nothing opens, choose a webmail provider or copy the request. Your request has not been sent yet.';
+  window.location.href = intakeEmailUrl('device', preparedIntake);
 });
 
 restoreIntakeDraft();
