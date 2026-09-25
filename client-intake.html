@@ -62,7 +62,7 @@
           <li><span>03</span><div><strong>Review before sending</strong><p>We build a structured summary for you to copy or email.</p></div></li>
           <li><span>04</span><div><strong>FlintWatch follows up</strong><p>We review the request and determine the most appropriate next step.</p></div></li>
         </ol>
-        <div class="warning-box"><strong>PRIVACY-FIRST LAUNCH</strong><p>This page does not submit your information to a public database. Your draft stays in this browser until you choose to copy it or prepare a message in your email app.</p></div>
+        <div class="warning-box"><strong>PRIVACY-FIRST LAUNCH</strong><p>This page does not submit your information to a public database. Your draft stays in this browser until you choose to copy it or open an email draft. A webmail draft is handled by the email provider you choose. Do not include passwords or other secrets.</p></div>
       </aside>
 
       <form id="client-intake-form" class="brand-form intake-form reveal" novalidate>
@@ -166,27 +166,27 @@
       <div class="section-heading">
         <p class="eyebrow">Ready to Send</p>
         <h2>Review your FlintWatch service request.</h2>
-        <p>Check your request, copy it, then open your email provider. Start a message to <strong>flintwatch.command@gmail.com</strong>, paste the request, and press Send. Sign in if needed. Your request has not been sent yet.</p>
+        <p>Check the request below, then choose your email provider. A draft addressed to <strong>flintwatch.command@gmail.com</strong> will open with the subject and request filled in. Review all three fields, then press Send. Sign in if needed; opening a draft does not send it.</p>
       </div>
       <div class="intake-review-card">
         <pre id="intake-summary"></pre>
         <div class="intake-review-actions">
-          <button class="button button-primary" type="button" id="copy-intake">Copy Request</button>
-          <a class="button button-secondary" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=flintwatch.command%40gmail.com" target="_blank" rel="noopener noreferrer">Open Gmail</a>
-          <a class="button button-secondary" href="https://outlook.live.com/mail/0/deeplink/compose?to=flintwatch.command%40gmail.com" target="_blank" rel="noopener noreferrer">Open Outlook</a>
-          <a class="button button-secondary" href="https://mail.yahoo.com/" target="_blank" rel="noopener noreferrer">Open Yahoo Mail</a>
-          <button class="text-action" type="button" id="email-intake">Use device email app</button>
+          <button class="button button-primary" type="button" data-email-provider="gmail">Use Gmail</button>
+          <button class="button button-secondary" type="button" data-email-provider="outlook">Use Outlook / Hotmail</button>
+          <button class="button button-secondary" type="button" data-email-provider="yahoo">Use Yahoo Mail</button>
+          <button class="button button-secondary" type="button" id="email-intake">Use my email app</button>
+          <button class="text-action" type="button" id="copy-intake">Copy request</button>
         </div>
         <details class="intake-more-email">
-          <summary>More email providers</summary>
+          <summary>Other email providers</summary>
           <div class="intake-review-actions">
             <a class="button button-secondary" href="https://www.icloud.com/mail" target="_blank" rel="noopener noreferrer">Open iCloud Mail</a>
             <a class="button button-secondary" href="https://mail.proton.me/" target="_blank" rel="noopener noreferrer">Open Proton Mail</a>
             <a class="button button-secondary" href="https://mail.aol.com/" target="_blank" rel="noopener noreferrer">Open AOL Mail</a>
           </div>
-          <p>Use another provider? Open its inbox in a new tab and paste your copied request into a new message.</p>
+          <p>For these providers, copy the request and paste it into a new message to flintwatch.command@gmail.com. You can also use the email app button if your provider is set as your device's default.</p>
         </details>
-        <p class="form-status" id="email-handoff-status" role="status" aria-live="polite">If you use another email provider, copy the request and paste it into a new message there. Confirm the To address before sending.</p>
+        <p class="form-status" id="email-handoff-status" role="status" aria-live="polite">Choose a provider to open a draft. If a field does not carry over after sign-in, copy the request and paste it before sending.</p>
       </div>
     </div>
   </section>
@@ -211,6 +211,6 @@
     </div>
   </div>
 </footer>
-<script src="script.js?v=20260925-2"></script>
+<script src="script.js?v=20260925-4"></script>
 </body>
 </html>
