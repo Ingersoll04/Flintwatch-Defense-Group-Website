@@ -1131,6 +1131,10 @@ button { color: inherit; }
 .client-intake-page .intake-review-section{ background: linear-gradient(180deg, #101519, #07090b); border-top: 1px solid var(--line-gold); }
 .client-intake-page .intake-review-card{ border: 1px solid var(--line-gold); background: rgba(7,9,11,.74); padding: 1.5rem; box-shadow: var(--shadow); }
 .client-intake-page .intake-review-card pre{ white-space: pre-wrap; word-break: break-word; margin: 0; padding: 1.25rem; background: #050708; border: 1px solid var(--line); color: #d9dee2; font: 500 .9rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.client-intake-page .intake-more-email{ margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .9rem; }
+.client-intake-page .intake-more-email summary{ color: var(--gold-bright); cursor: pointer; font-weight: 700; }
+.client-intake-page .intake-more-email summary:focus-visible{ outline: 2px solid var(--gold-bright); outline-offset: 4px; }
+.client-intake-page .intake-more-email p{ margin-bottom: 0; color: var(--muted); font-size: .9rem; }
 
 @media (max-width: 900px) {
   .client-intake-page .intake-alert-grid{ grid-template-columns: 1fr; }

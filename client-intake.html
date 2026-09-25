@@ -14,7 +14,7 @@
   <title>Client Intake | FlintWatch Defense Group</title>
   <link rel="icon" href="assets/flintwatch-mark.png" type="image/png">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260925-3">
 </head>
 <body class="client-intake-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -166,7 +166,7 @@
       <div class="section-heading">
         <p class="eyebrow">Ready to Send</p>
         <h2>Review your FlintWatch service request.</h2>
-        <p>Check your request, then copy it and open Gmail or Outlook. Start a message to <strong>flintwatch.command@gmail.com</strong>, paste the request, and press Send. Your request has not been sent yet.</p>
+        <p>Check your request, copy it, then open your email provider. Start a message to <strong>flintwatch.command@gmail.com</strong>, paste the request, and press Send. Sign in if needed. Your request has not been sent yet.</p>
       </div>
       <div class="intake-review-card">
         <pre id="intake-summary"></pre>
@@ -174,8 +174,18 @@
           <button class="button button-primary" type="button" id="copy-intake">Copy Request</button>
           <a class="button button-secondary" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=flintwatch.command%40gmail.com" target="_blank" rel="noopener noreferrer">Open Gmail</a>
           <a class="button button-secondary" href="https://outlook.live.com/mail/0/deeplink/compose?to=flintwatch.command%40gmail.com" target="_blank" rel="noopener noreferrer">Open Outlook</a>
+          <a class="button button-secondary" href="https://mail.yahoo.com/" target="_blank" rel="noopener noreferrer">Open Yahoo Mail</a>
           <button class="text-action" type="button" id="email-intake">Use device email app</button>
         </div>
+        <details class="intake-more-email">
+          <summary>More email providers</summary>
+          <div class="intake-review-actions">
+            <a class="button button-secondary" href="https://www.icloud.com/mail" target="_blank" rel="noopener noreferrer">Open iCloud Mail</a>
+            <a class="button button-secondary" href="https://mail.proton.me/" target="_blank" rel="noopener noreferrer">Open Proton Mail</a>
+            <a class="button button-secondary" href="https://mail.aol.com/" target="_blank" rel="noopener noreferrer">Open AOL Mail</a>
+          </div>
+          <p>Use another provider? Open its inbox in a new tab and paste your copied request into a new message.</p>
+        </details>
         <p class="form-status" id="email-handoff-status" role="status" aria-live="polite">If you use another email provider, copy the request and paste it into a new message there. Confirm the To address before sending.</p>
       </div>
     </div>
