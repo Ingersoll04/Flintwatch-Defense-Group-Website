@@ -35,6 +35,11 @@ document.querySelectorAll('[data-year], #year').forEach((el) => {
   el.textContent = new Date().getFullYear();
 });
 
+// Email links need CRLF line endings, including when clients type multiline text.
+function encodeEmailBody(body) {
+  return encodeURIComponent(body.replace(/\r\n|\r|\n/g, '\r\n'));
+}
+
 const form = document.getElementById('service-request');
 const status = document.getElementById('form-status');
 
@@ -52,7 +57,7 @@ form?.addEventListener('submit', (event) => {
   const areas = selectedAreas.length ? selectedAreas.join(', ') : 'Not specified';
 
   const subject = encodeURIComponent(`FlintWatch Client Intake — ${data.get('service')}`);
-  const body = encodeURIComponent(
+  const body = encodeEmailBody(
 `FLINTWATCH CLIENT INTAKE
 
 CONTACT
@@ -288,14 +293,16 @@ copyIntakeButton?.addEventListener('click', async () => {
 function intakeEmailUrl(provider, request) {
   const to = encodeURIComponent(intakeRecipient);
   const subject = encodeURIComponent(request.subject);
-  const body = encodeURIComponent(request.body);
+  const body = encodeEmailBody(request.body);
   switch (provider) {
     case 'gmail':
       return `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
     case 'outlook':
       return `https://outlook.live.com/mail/0/deeplink/compose?to=${to}&subject=${subject}&body=${body}`;
     case 'yahoo':
-      return `https://compose.mail.yahoo.com/?to=${to}&subject=${subject}&body=${body}`;
+      // Yahoo can collapse the line breaks supplied through a compose URL.
+      // Open an addressed draft and let the client paste the copied summary.
+      return `https://compose.mail.yahoo.com/?to=${to}&subject=${subject}`;
     case 'device':
       return `mailto:${intakeRecipient}?subject=${subject}&body=${body}`;
     default:
@@ -303,19 +310,40 @@ function intakeEmailUrl(provider, request) {
   }
 }
 
+function copyEmailFallback(request, provider) {
+  const instructions = provider === 'yahoo'
+    ? 'Paste the copied request into the Yahoo draft before sending. If paste is empty, return here and use Copy request.'
+    : 'Check the draft before sending. If its lines are merged or text is missing, paste the copied request into the message body.';
+
+  if (!navigator.clipboard?.writeText) {
+    if (emailHandoffStatus) emailHandoffStatus.textContent = `Automatic copying is unavailable. Return here and click Copy request. ${instructions}`;
+    return;
+  }
+  navigator.clipboard.writeText(request.body).then(() => {
+    if (emailHandoffStatus) emailHandoffStatus.textContent = `Formatted request copied. ${instructions} Nothing has been sent yet.`;
+  }).catch(() => {
+    if (emailHandoffStatus) emailHandoffStatus.textContent = `Clipboard access was blocked. Return here and click Copy request. ${instructions}`;
+  });
+}
+
 emailProviderButtons.forEach((button) => {
   button.addEventListener('click', () => {
     if (!preparedIntake) return;
-    const url = intakeEmailUrl(button.dataset.emailProvider, preparedIntake);
+    const provider = button.dataset.emailProvider;
+    const url = intakeEmailUrl(provider, preparedIntake);
     if (!url) return;
-    if (emailHandoffStatus) emailHandoffStatus.textContent = 'Opening your email draft. Check that the recipient, subject, and complete request appear before pressing Send. If anything is missing, use Copy request. Your request has not been sent yet.';
+    if (emailHandoffStatus) emailHandoffStatus.textContent = provider === 'yahoo'
+      ? 'Opening Yahoo with the recipient and subject filled in. Paste the formatted request into the message before pressing Send.'
+      : 'Opening your email draft. Check the recipient, subject, and spacing before pressing Send.';
+    copyEmailFallback(preparedIntake, provider);
     window.open(url, '_blank', 'noopener,noreferrer');
   });
 });
 
 emailIntakeButton?.addEventListener('click', () => {
   if (!preparedIntake) return;
-  if (emailHandoffStatus) emailHandoffStatus.textContent = 'Opening your default email app. If nothing opens, choose a webmail provider or copy the request. Your request has not been sent yet.';
+  if (emailHandoffStatus) emailHandoffStatus.textContent = 'Opening your default email app. Check the recipient, subject, and spacing before pressing Send.';
+  copyEmailFallback(preparedIntake, 'device');
   window.location.href = intakeEmailUrl('device', preparedIntake);
 });
 
