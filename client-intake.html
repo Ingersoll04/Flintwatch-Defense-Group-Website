@@ -166,17 +166,18 @@
       <div class="section-heading">
         <p class="eyebrow">Ready to Send</p>
         <h2>Review your FlintWatch service request.</h2>
-        <p>Check the request below, then choose your email provider. A draft addressed to <strong>flintwatch.command@gmail.com</strong> will open with the subject and request filled in. Review all three fields, then press Send. Sign in if needed; opening a draft does not send it.</p>
+        <p>Check the request below, then choose your email provider. Gmail, Outlook, and your default email app open a draft addressed to <strong>flintwatch.command@gmail.com</strong> with the request filled in. Yahoo opens an addressed draft for you to paste the formatted request. Review the message before pressing Send; opening a draft does not send it.</p>
       </div>
       <div class="intake-review-card">
         <pre id="intake-summary"></pre>
         <div class="intake-review-actions">
           <button class="button button-primary" type="button" data-email-provider="gmail">Use Gmail</button>
           <button class="button button-secondary" type="button" data-email-provider="outlook">Use Outlook / Hotmail</button>
-          <button class="button button-secondary" type="button" data-email-provider="yahoo">Use Yahoo Mail</button>
+          <button class="button button-secondary" type="button" data-email-provider="yahoo">Use Yahoo Mail (paste request)</button>
           <button class="button button-secondary" type="button" id="email-intake">Use my email app</button>
           <button class="text-action" type="button" id="copy-intake">Copy request</button>
         </div>
+        <p>Choosing an email option also copies your formatted request. If any provider merges the lines or leaves out text, paste the copied request into its message body. For Yahoo, paste it before sending; if paste is empty, return here and use Copy request.</p>
         <details class="intake-more-email">
           <summary>Other email providers</summary>
           <div class="intake-review-actions">
@@ -186,7 +187,7 @@
           </div>
           <p>For these providers, copy the request and paste it into a new message to flintwatch.command@gmail.com. You can also use the email app button if your provider is set as your device's default.</p>
         </details>
-        <p class="form-status" id="email-handoff-status" role="status" aria-live="polite">Choose a provider to open a draft. If a field does not carry over after sign-in, copy the request and paste it before sending.</p>
+        <p class="form-status" id="email-handoff-status" role="status" aria-live="polite">Choose a provider, then review the recipient, subject, and message before sending.</p>
       </div>
     </div>
   </section>
@@ -211,6 +212,6 @@
     </div>
   </div>
 </footer>
-<script src="script.js?v=20260925-4"></script>
+<script src="script.js?v=20260925-5"></script>
 </body>
 </html>
