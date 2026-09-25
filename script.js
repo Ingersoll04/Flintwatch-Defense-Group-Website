@@ -94,6 +94,7 @@ const saveIntakeButton = document.getElementById('save-intake');
 const clearIntakeButton = document.getElementById('clear-intake');
 const copyIntakeButton = document.getElementById('copy-intake');
 const emailIntakeButton = document.getElementById('email-intake');
+const emailHandoffStatus = document.getElementById('email-handoff-status');
 
 const intakeRequestTypes = {
   'Cyber Defense & Digital Security': [
@@ -257,9 +258,11 @@ copyIntakeButton?.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(text);
     copyIntakeButton.textContent = 'Copied';
+    if (emailHandoffStatus) emailHandoffStatus.textContent = 'Request copied. Open your email provider, paste it into a message to flintwatch.command@gmail.com, then press Send.';
     setTimeout(() => { copyIntakeButton.textContent = 'Copy Request'; }, 1600);
   } catch {
     window.prompt('Copy your FlintWatch request:', text);
+    if (emailHandoffStatus) emailHandoffStatus.textContent = 'Copy the selected request, then paste it into a message to flintwatch.command@gmail.com and press Send.';
   }
 });
 
@@ -268,6 +271,7 @@ emailIntakeButton?.addEventListener('click', () => {
   const text = intakeSummary?.textContent || buildIntakeSummary(d);
   const subject = encodeURIComponent(`FlintWatch Service Request — ${d.requestType || d.serviceArea || 'Client Intake'}`);
   const body = encodeURIComponent(text);
+  if (emailHandoffStatus) emailHandoffStatus.textContent = 'Opening your device email app. If nothing happens, copy the request and use Gmail, Outlook, or your usual email provider. Your request has not been sent yet.';
   window.location.href = `mailto:flintwatch.command@gmail.com?subject=${subject}&body=${body}`;
 });
 
